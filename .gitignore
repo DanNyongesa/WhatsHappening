@@ -4,3 +4,4 @@ __pycache__
 **.exe
 **.html
 **.log
+.ipynb_checkpoints
