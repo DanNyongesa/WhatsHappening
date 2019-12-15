@@ -1,0 +1,4 @@
+---
+  # Main setup/provision task
+
+- include: common.yml

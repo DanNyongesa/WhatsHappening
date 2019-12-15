@@ -14,5 +14,6 @@ logging.basicConfig(
 
 # codes
 SUCCESS = 101
+UNKNOWN = 600
 
 

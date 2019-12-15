@@ -9,30 +9,39 @@ import re
 import datetime
 from bs4 import BeautifulSoup
 
-from event_model import Event
+from scrapper.event_model import Event
 from scrapper.utils import build_request_response
+from scrapper import SUCCESS, UNKNOWN
 
 from scrapper.base_extractor import BaseExtractor
 
 
 class ScrapMookh(BaseExtractor):
-    def __init__(*args, **kwargs):
+    def __init__(self, *args, **kwargs):
         driver = kwargs.get("driver")
         if driver is None:
             raise ValueError("Could not instatiate mookh scrpper. Missing value for driver!")
-        super.__init__(
+        self.driver= driver
+        super().__init__(
             *args,
             **kwargs,
+            success_status_codes=[SUCCESS],
             site_name="mookh",
             site_url="https://mookh.com",
-            endpoint="/events"
+            response=None
         )
+        self.endpoint="/events"
         self.event_links=[]
 
     def run(self):
-        self._prepare_driver()
-        self._get_all_events()
-        self._parse_events()
+        try:
+            self._prepare_driver()
+            self._get_all_events()
+            self._parse_events()
+            self.response = build_request_response(SUCCESS, "requests successful")
+        except Exception as exc:
+            self.response = build_request_response(UNKNOWN, str(exc))
+
     
 
     def _prepare_driver(self, delay=10):
@@ -47,7 +56,7 @@ class ScrapMookh(BaseExtractor):
                 )
             )
         except Exception as exc:
-            self.response = build_request_response(500, f"Timed out while loading page with exception {exc}")
+            self.response = build_request_response(UNKNOWN, f"Timed out while loading page with exception {exc}")
             
 
     def _get_all_events(self): 

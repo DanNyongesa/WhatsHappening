@@ -1,0 +1,25 @@
+---
+
+- name: Ensure packages required for the Flask application
+  apt: name="{{ app_packages }}" state=present update_cache=yes
+  tags: setup
+
+- name: Install the latest pip version
+  pip: name=pip extra_args='-U' executable="pip{{ app_python_version }}"
+  tags: setup
+
+- name: Ensure app user group
+  group: name={{ app_user }} state=present
+  tags: setup
+
+- name: Ensure app user
+  user: name={{ app_user }} group={{ app_user }}
+  tags: setup
+
+- name: Ensure app directory
+  file: dest={{ app_directory }} state=directory mode=0775
+  tags: setup
+
+- name: Ensure app log directory
+  file: dest={{ app_log_directory }} state=directory mode=0775
+  tags: setup

@@ -7,7 +7,11 @@ from scrapper.mookh import ScrapMookh
 
 
 # reduce log level
-_loggers = ["pika", "asyncio", "urllib3"]
+_loggers = []
+_loggers.append("pika")
+_loggers.append("asyncio")
+_loggers.append("urlib3")
+_loggers.append("selenium")
 for logger in _loggers:
     logging.getLogger(logger).setLevel(logging.WARNING)
 
@@ -26,8 +30,10 @@ def run(config=None):
 
     # load extractors
     ticket_sasa_extractor = ScrapTicketSasa(amqp_client=amqp)
-    mookh_extractor = ScrapMookh(amqp_client=amqp, driver=webdriver)
-    extractors = [mookh_extractor, ticket_sasa_extractor]
+    mookh_extractor = ScrapMookh(amqp_client=amqp, driver=driver)
+    extractors = []
+    extractors.append(mookh_extractor)
+    # extractors.append(ticket_sasa_extractor)
     # run 
     for extractor in extractors:
         run_extractor(extractor)

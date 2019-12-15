@@ -45,12 +45,14 @@ class BaseExtractor():
             status_code = self.response.get("status_code", -1)
             if status_code in self.success_status_codes:
                 self.result = "SUCCESS"
+            else:
+                self.result = "FAILED"
 
     def log_response(self):
         if self.result == "SUCCESS":
             self.logger.info(f"extracted {self.site_name} successfully!")
         else:
-            self.logger.error(f"failed to extract {self.site_name} with error code{self.response['status_code']}")
+            self.logger.error(f"Encountered error {self.response['status_code']} : {self.response['status_details']}")
 
     def send_messages(self):
         self.logger.info("Sending messages")

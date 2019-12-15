@@ -1,0 +1,64 @@
+flaskapp_app_name: loanbee-analysis-service
+
+flaskapp_port: 8002
+flaskapp_nginx_port: 5002
+
+flaskapp_app_environment: "prod"
+flaskapp_app_hostname: "localhost"
+flaskapp_app_redis_host: 10.128.0.3
+flaskapp_app_redis_port: 6379
+flaskapp_app_redis_url: "redis://{{ flaskapp_app_redis_host }}:{{ flaskapp_app_redis_port }}"
+flaskapp_app_database_uri: "postgresql://apps:78y188Ge@10.128.0.2/loanbee_analysis"
+flaskapp_app_secret_key: "wSIVXkPRUzVk0tk9PHzLWB9lC1KH+48WQM7E0soJSrCdXHhcS8rY6ZsDgHzqzpNE"
+
+flaskapp_app_user: engineering
+
+flaskapp_app_requirements: "{{ flaskapp_app_directory }}/config/requirements.txt"
+
+flaskapp_app_directory: "/opt/apps/{{ flaskapp_app_name }}"
+
+flaskapp_app_run_directory: "{{ flaskapp_app_directory }}/bin"
+
+flaskapp_app_supervisor_group: "{{ flaskapp_app_name }}s"
+
+flaskapp_app_loglevel: warn
+
+flaskapp_app_repository: git@bitbucket.org:loanbee/loanbee-analysis-service.git
+
+flaskapp_app_version: master
+
+flaskapp_app_repository_key_file: /home/{{ flaskapp_app_user }}/.ssh/id_rsa
+
+flaskapp_python_version: 2.7
+
+flaskapp_app_packages:
+  - git
+  - python{{ flaskapp_python_version }}
+  - build-essential
+  - python-dev
+  - python-pip
+  - python-virtualenv
+  - libpq-dev
+  - build-essential
+
+flaskapp_app_requires_npm: false
+
+flaskapp_app_requires_bower: false
+
+flaskapp_use_postgresql: false
+
+flaskapp_run_migrations: false
+
+flaskapp_migrations_dir: ../migrations
+
+flaskapp_migration_command: python manage.py migrate
+
+flaskapp_nginx_server_name: "analysis.api.loanbee.tech"
+
+flaskapp_nginx_static_dir: "{{ flaskapp_app_directory }}/app/static/"
+
+flaskapp_use_custom_nginx_conf: false
+
+flaskapp_use_custom_supervisor_conf: false
+
+flaskapp_use_custom_start_script: false

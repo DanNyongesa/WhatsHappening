@@ -1,0 +1,30 @@
+---
+  # Deploy the application
+
+- name: Checkout the latest source code
+  git: repo={{ app_repository }} dest={{ app_directory }}
+    version={{ app_version }} accept_hostkey=true
+    key_file={{ app_repository_key_file }} force=yes
+  when: app_repository is defined and app_repository
+  tags: deploy
+
+
+- name: Ensure app bin directory
+  file: dest={{ app_directory }}/bin state=directory mode=0775 
+  tags: deploy
+
+- name: Ensure app log directory
+  file: dest={{ app_directory }}/logs state=directory mode=0775 
+    owner={{ app_user }}
+    group={{ app_user }}
+  tags: deploy
+
+- name: Install required packages
+  pip: requirements="{{ app_directory }}/config/requirements/prod.txt" virtualenv="{{ app_directory }}/venv" virtualenv_python="python{{ flaskapp_python_version }}"
+  tags: deploy
+  
+- name: Ensure all service scripts
+  template: src={{ item }} dest={{ app_run_directory }} mode=0755
+  with_fileglob:
+    - "../templates/bin/*"
+  tags: deploy
