@@ -12,17 +12,24 @@ import aiohttp
 
 from aiohttp import ClientSession
 
-from scrapper.machinery import BaseAction, Event, build_request_response, run_action_class
+from scrapper.utils import build_request_response
+from scrapper.event_model import Event
+from scrapper.base_extractor import BaseExtractor
+
+
 from scrapper import SUCCESS
 
 
-class ScrapTicketSasa(BaseAction):
-    DEFAULT_OPTIONS = {
-        "success_status_codes": [SUCCESS],
-        "events": [],
-        "queue_name": "ticket_sasa",
-        "site_name": "ticketsasa.com",
-    }
+class ScrapTicketSasa(BaseExtractor):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            *args,
+            **kwargs,
+            success_status_codes=[SUCCESS],
+            site_name="ticketsasa",
+            site_url="https://www.ticketsasa.com/",
+            response = None
+        )
 
     def run(self):
         try:
@@ -35,11 +42,6 @@ class ScrapTicketSasa(BaseAction):
 
         except Exception as exc:
             self.response = build_request_response(500, str(exc))
-    
-    def send_messages(self):
-        self.logger.info(f"Loaded {len(self.events)} events")
-        self.logger.info(f"{self.events[0]}")
-        self.logger.info(f"{self.events[-1]}")
 
     async def _fetch_html_async(
         self, url: str, session: ClientSession, encoding="utf-8", **kwargs
@@ -53,7 +55,6 @@ class ScrapTicketSasa(BaseAction):
     @staticmethod
     def _parse_time(time_str: str, _format="%I:%S %p") -> dt.time:
         return dt.strptime(time_str, _format).time()
-        
 
     @staticmethod
     def _parse_end_date(date_tag: bs4.element.Tag, _format="%A%d%B%Y") -> dt.date:
@@ -66,10 +67,11 @@ class ScrapTicketSasa(BaseAction):
             return None
 
     @staticmethod
-    def _parse_start_date(date_tag: bs4.element.Tag, _format="%Y-%m-%dT%H:%M")->dt.date:
+    def _parse_start_date(
+        date_tag: bs4.element.Tag, _format="%Y-%m-%dT%H:%M"
+    ) -> dt.date:
         date_str = date_tag.get("content")
         return dt.strptime(date_str, _format).date()
-    
 
     async def _parse_event(
         self, banner_url: str, url: str, session: ClientSession, **kwargs
@@ -117,7 +119,7 @@ class ScrapTicketSasa(BaseAction):
 
     async def _load_page_parse_events(self, **kwargs) -> None:
 
-        base_url = "https://www.ticketsasa.com"
+        base_url = self.site_url
         url = base_url + "/events"
         html_doc = req.get(url).content
 
