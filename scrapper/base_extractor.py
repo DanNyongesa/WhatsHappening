@@ -29,10 +29,14 @@ class BaseExtractor():
 
     def _add_options(self, **options):
         for key in self.default_config:
+
             if key in options:
-                setattr(self,key, options.pop(key))
+                self.__setattr__(key, options.pop(key))
+                # setattr(self,key, options.pop(key))
             else:
-                setattr(self, key, self.default_config["key"])
+                self.__setattr__(key, self.default_config[key])
+                # setattr(self, key, self.default_config[key])
+
 
     def run(self): raise NotImplementedError
 
@@ -42,15 +46,21 @@ class BaseExtractor():
             if status_code in self.success_status_codes:
                 self.result = "SUCCESS"
 
+    def log_response(self):
+        if self.result == "SUCCESS":
+            self.logger.info(f"extracted {self.site_name} successfully!")
+        else:
+            self.logger.error(f"failed to extract {self.site_name} with error code{self.response['status_code']}")
+
     def send_messages(self):
         self.logger.info("Sending messages")
         if len(self.events) > 0:
             # send messages to rabbit
             for event in self.events:
-                self.ampqp_client.publish(exchange_type="direct",
-                    routing_key=self.AMQP_ROUTING_KEY,
+                self.amqp_client.publish(exchange_type="direct",
+                    routing_key=self.amqp_routing_key,
                     data=event.serialize("proto"),
-                    exchange=self.AMQP_EXCHANGE
+                    exchange=self.amqp_exchange
                 )
         else:
             self.logger.info("no messages to send")

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package dundaa.contracts;
+
+message Event {
+    string name = 1;
+    string location =2;
+    float start_date = 3;
+    float end_date = 4;
+    string banner_url = 5;
+    string site_name = 6;
+    string url = 7;
+}
+
+message Events {
+    repeated Event events = 1;
+}

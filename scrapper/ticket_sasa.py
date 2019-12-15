@@ -23,7 +23,6 @@ from scrapper import SUCCESS
 class ScrapTicketSasa(BaseExtractor):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            *args,
             **kwargs,
             success_status_codes=[SUCCESS],
             site_name="ticketsasa",
