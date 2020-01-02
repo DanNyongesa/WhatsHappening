@@ -7,3 +7,4 @@ __pycache__
 .ipynb_checkpoints
 protobuf-python-3.11.1.zip
 protobuf-python-3.11.1
+.env

@@ -15,6 +15,7 @@ _loggers.append("selenium")
 for logger in _loggers:
     logging.getLogger(logger).setLevel(logging.WARNING)
 
+
 def run(config=None):
     # load amqp sdk
     amqp_url = (
@@ -23,10 +24,10 @@ def run(config=None):
     amqp = DundaaAMQPSDK(amqp_url=amqp_url)
 
     # prepare selenium driver
-    # options = webdriver.ChromeOptions()
-    # options.add_argument("--incognito")
-    # options.add_argument("--headless")
-    # driver = webdriver.Chrome("chromedriver_win32\chromedriver.exe", options=options)
+    options = webdriver.ChromeOptions()
+    options.add_argument("--incognito")
+    options.add_argument("--headless")
+    driver = webdriver.Chrome("chromedriver_win32\chromedriver.exe", options=options)
 
     # load extractors
     ticket_sasa_extractor = ScrapTicketSasa(amqp_client=amqp)
@@ -34,9 +35,10 @@ def run(config=None):
     extractors = []
     # extractors.append(mookh_extractor)
     extractors.append(ticket_sasa_extractor)
-    # run 
+    # run
     for extractor in extractors:
         run_extractor(extractor)
+
 
 if __name__ == "__main__":
     run()
