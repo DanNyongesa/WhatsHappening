@@ -27,7 +27,7 @@ def run(config=None):
     options = webdriver.ChromeOptions()
     options.add_argument("--incognito")
     options.add_argument("--headless")
-    driver = webdriver.Chrome("chromedriver_win32\chromedriver.exe", options=options)
+    driver = webdriver.Chrome("bin\chromedriver.exe", options=options)
 
     # load extractors
     ticket_sasa_extractor = ScrapTicketSasa(amqp_client=amqp)
