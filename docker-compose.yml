@@ -7,3 +7,4 @@ services:
     command: [ "python", "EventScrapper/ev_loop.py" ]
     volumes:
       - ./:/app/src
+
