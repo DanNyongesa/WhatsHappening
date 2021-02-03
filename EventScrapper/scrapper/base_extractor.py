@@ -1,4 +1,3 @@
-from scrapper.event_model import Event
 import logging
 import copy
 
@@ -57,13 +56,14 @@ class BaseExtractor():
 
     def send_messages(self):
         self.logger.info("Sending messages")
-        if len(self.events) > 0:
-            # send messages to rabbit
-            for event in self.events:
-                self.amqp_client.publish(exchange_type="direct",
-                                         routing_key=self.amqp_routing_key,
-                                         data=event.serialize("proto"),
-                                         exchange=self.amqp_exchange
-                                         )
-        else:
-            self.logger.info("no messages to send")
+        self.logger.info("found %d events" % len(self.events))
+        # if len(self.events) > 0:
+        #     # send messages to rabbit
+        #     for event in self.events:
+        #         self.amqp_client.publish(exchange_type="direct",
+        #                                  routing_key=self.amqp_routing_key,
+        #                                  data=event.serialize("proto"),
+        #                                  exchange=self.amqp_exchange
+        #                                  )
+        # else:
+        #     self.logger.info("no messages to send")

@@ -1,0 +1,9 @@
+version: '3'
+services:
+  scrapper:
+    image: darklotus/dundaa:dev
+    build:
+      context: .
+    command: [ "python", "EventScrapper/ev_loop.py" ]
+    volumes:
+      - ./:/app/src

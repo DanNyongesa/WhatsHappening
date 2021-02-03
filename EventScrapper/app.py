@@ -1,10 +1,10 @@
-from scrapper.ticket_sasa import ScrapTicketSasa
 import logging
-from scrapper.amqp_sdk import DundaaAMQPSDK
-from scrapper.utils import run_extractor
-from selenium import webdriver
-from scrapper.mookh import ScrapMookh
 
+from EventScrapper.scrapper.amqp_sdk import DundaaAMQPSDK
+from EventScrapper.scrapper.ticket_sasa import ScrapTicketSasa
+from EventScrapper.scrapper.utils import run_extractor
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 # reduce log level
 _loggers = []
@@ -16,6 +16,18 @@ for logger in _loggers:
     logging.getLogger(logger).setLevel(logging.WARNING)
 
 
+def set_chrome_options() -> Options:
+    """Sets chrome options for Selenium.
+    Chrome options for headless browser is enabled.
+    """
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--incognito")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    return chrome_options
+
+
 def run(config=None):
     # load amqp sdk
     amqp_url = (
@@ -24,10 +36,8 @@ def run(config=None):
     amqp = DundaaAMQPSDK(amqp_url=amqp_url)
 
     # prepare selenium driver
-    options = webdriver.ChromeOptions()
-    options.add_argument("--incognito")
-    options.add_argument("--headless")
-    driver = webdriver.Chrome("bin\chromedriver.exe", options=options)
+    chrome_options = set_chrome_options()
+    driver = webdriver.Chrome(options=chrome_options)
 
     # load extractors
     ticket_sasa_extractor = ScrapTicketSasa(amqp_client=amqp)

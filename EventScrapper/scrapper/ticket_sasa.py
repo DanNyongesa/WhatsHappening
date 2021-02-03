@@ -6,10 +6,10 @@ import bs4
 import requests as req
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
-from scrapper import SUCCESS
-from scrapper.base_extractor import BaseExtractor
-from scrapper.event_model import Event
-from scrapper.utils import build_request_response
+from EventScrapper.scrapper import SUCCESS
+from EventScrapper.scrapper.base_extractor import BaseExtractor
+from EventScrapper.scrapper.event_model import Event
+from EventScrapper.scrapper.utils import build_request_response
 
 
 class ScrapTicketSasa(BaseExtractor):
@@ -18,7 +18,7 @@ class ScrapTicketSasa(BaseExtractor):
             **kwargs,
             success_status_codes=[SUCCESS],
             site_name="ticketsasa",
-            site_url="https://www.ticketsasa.com/",
+            site_url="https://www.ticketsasa.com",
             response = None
         )
 
