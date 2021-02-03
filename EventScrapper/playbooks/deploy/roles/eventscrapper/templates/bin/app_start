@@ -1,7 +1,0 @@
-#!/bin/bash
-
-APPDIR="{{ app_directory }}"
-
-cd $APPDIR
-
-exec venv/bin/python app.py

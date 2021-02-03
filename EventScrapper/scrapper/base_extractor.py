@@ -2,6 +2,7 @@ from scrapper.event_model import Event
 import logging
 import copy
 
+
 class BaseExtractor():
     """Exctractor base class
     Handles:
@@ -37,8 +38,8 @@ class BaseExtractor():
                 self.__setattr__(key, self.default_config[key])
                 # setattr(self, key, self.default_config[key])
 
-
-    def run(self): raise NotImplementedError
+    def run(self):
+        raise NotImplementedError
 
     def get_result(self):
         if self.response and isinstance(self.response, dict):
@@ -60,10 +61,9 @@ class BaseExtractor():
             # send messages to rabbit
             for event in self.events:
                 self.amqp_client.publish(exchange_type="direct",
-                    routing_key=self.amqp_routing_key,
-                    data=event.serialize("proto"),
-                    exchange=self.amqp_exchange
-                )
+                                         routing_key=self.amqp_routing_key,
+                                         data=event.serialize("proto"),
+                                         exchange=self.amqp_exchange
+                                         )
         else:
             self.logger.info("no messages to send")
-

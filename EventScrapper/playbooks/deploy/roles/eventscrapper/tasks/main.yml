@@ -1,8 +1,0 @@
----
-  # Main entry: runs setup and deploy task
-
-- include: setup.yml
-  tags: [setup]
-
-- include: deploy.yml
-  tags: [deploy]

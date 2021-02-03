@@ -1,23 +1,15 @@
-from bs4 import BeautifulSoup
-import requests as req
-from datetime import datetime as dt
-import logging
 import asyncio
-import copy
-import sys
 import re
+from datetime import datetime as dt
+
 import bs4
-
-import aiohttp
-
+import requests as req
 from aiohttp import ClientSession
-
-from scrapper.utils import build_request_response
-from scrapper.event_model import Event
-from scrapper.base_extractor import BaseExtractor
-
-
+from bs4 import BeautifulSoup
 from scrapper import SUCCESS
+from scrapper.base_extractor import BaseExtractor
+from scrapper.event_model import Event
+from scrapper.utils import build_request_response
 
 
 class ScrapTicketSasa(BaseExtractor):
