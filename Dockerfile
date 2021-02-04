@@ -20,6 +20,10 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /app/src
 
+ENV AzureWebJobsScriptRoot=/app/src \
+    AzureFunctionsJobHost__Logging__Console__IsEnabled=true
+
+
 #Copy source code
 COPY . /app/src
 
