@@ -9,6 +9,7 @@ from EventScrapper.ticket_sasa import ScrapTicketSasa
 from EventScrapper.utils import run_extractor
 from shared.messengers.azure_blob import DundaaBlobClient
 from shared.messengers.messenger import BlobMessengerSetting
+from . import __service_key__, __service_name__
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
@@ -53,8 +54,8 @@ def run(config=None):
     )
     # define how messages from this service are routed
     messenger_setting = BlobMessengerSetting(
-        key="events",
-        service_name="WebScrapper"
+        key=__service_key__,
+        service_name=__service_name__
     )
     # load extractors
     ticket_sasa_extractor = ScrapTicketSasa(messenger=azure_blob_client, messenger_setting=messenger_setting)
