@@ -1,6 +1,8 @@
 import logging
 import copy
 
+from shared.messenger import MessengerSetting
+
 
 class BaseExtractor():
     """Exctractor base class
@@ -15,11 +17,11 @@ class BaseExtractor():
         "success_status_codes": [],
         "site_name": "",
         "site_url": "",
-        "amqp_client": "",
         "events": [],
         "response": None,
-        "amqp_exchange": "dundaa.events",
-        "amqp_routing_key": "scrapped.events"
+        "messenger": None,
+        "messenger_setting": MessengerSetting(),
+        "routing_key": "scrapped_events"
     }
 
     def __init__(self, **kwargs):
@@ -55,15 +57,7 @@ class BaseExtractor():
             self.logger.error(f"Encountered error {self.response['status_code']} : {self.response['status_details']}")
 
     def send_messages(self):
-        self.logger.info("Sending messages")
+        self.logger.info("Sending messages to {}".format(self.messenger_setting.key))
         self.logger.info("found %d events" % len(self.events))
-        # if len(self.events) > 0:
-        #     # send messages to rabbit
-        #     for event in self.events:
-        #         self.amqp_client.publish(exchange_type="direct",
-        #                                  routing_key=self.amqp_routing_key,
-        #                                  data=event.serialize("proto"),
-        #                                  exchange=self.amqp_exchange
-        #                                  )
-        # else:
-        #     self.logger.info("no messages to send")
+        if self.messenger is not None:
+            self.messenger.send_message(data=[event.serialize("json") for event in self.events], messenger_setting=self.messenger_setting)

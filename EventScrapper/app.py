@@ -1,10 +1,13 @@
 import logging
+import os
 
-from EventScrapper.scrapper.amqp_sdk import DundaaAMQPSDK
-from EventScrapper.scrapper.ticket_sasa import ScrapTicketSasa
-from EventScrapper.scrapper.utils import run_extractor
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+
+from EventScrapper.scrapper.ticket_sasa import ScrapTicketSasa
+from EventScrapper.scrapper.utils import run_extractor
+from shared.azure_blob import DundaaBlobClient
+from shared.messenger import BlobMessengerSetting
 
 # reduce log level
 _loggers = []
@@ -29,22 +32,27 @@ def set_chrome_options() -> Options:
 
 
 def run(config=None):
-    # load amqp sdk
-    amqp_url = (
-        "amqp://qprfemrn:P__TkhouA0w9w2-GBbQcgBpw0Wg3sVav@shrimp.rmq.cloudamqp.com/qprfemrn"
-    )
-    amqp = DundaaAMQPSDK(amqp_url=amqp_url)
-
     # prepare selenium driver
     chrome_options = set_chrome_options()
     driver = webdriver.Chrome(options=chrome_options)
 
+    # get blob service client
+    azure_blob_connection_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
+    azure_blob_client = DundaaBlobClient(
+        connection_string=azure_blob_connection_str,
+        logger=logging.getLogger(__name__).setLevel(logging.WARNING)
+    )
+    # define how messages from this service are routed
+    messenger_setting = BlobMessengerSetting(
+        key="events",
+        service_name="WebScrapper"
+    )
     # load extractors
-    ticket_sasa_extractor = ScrapTicketSasa(amqp_client=amqp)
-    # mookh_extractor = ScrapMookh(amqp_client=amqp, driver=driver)
+    ticket_sasa_extractor = ScrapTicketSasa(messenger=azure_blob_client, messenger_setting=messenger_setting)
+
     extractors = []
-    # extractors.append(mookh_extractor)
     extractors.append(ticket_sasa_extractor)
+
     # run
     for extractor in extractors:
         run_extractor(extractor)
