@@ -1,13 +1,22 @@
 import logging
 import os
+import sys
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from EventScrapper.scrapper.ticket_sasa import ScrapTicketSasa
-from EventScrapper.scrapper.utils import run_extractor
+from EventScrapper.ticket_sasa import ScrapTicketSasa
+from EventScrapper.utils import run_extractor
 from shared.messengers.azure_blob import DundaaBlobClient
 from shared.messengers.messenger import BlobMessengerSetting
+
+logging.basicConfig(
+    format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
+    level=logging.DEBUG,
+    datefmt="%H:%M:%S",
+    stream=sys.stderr,
+)
+
 
 # reduce log level
 _loggers = []
