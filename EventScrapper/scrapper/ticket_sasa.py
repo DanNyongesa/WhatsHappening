@@ -8,7 +8,7 @@ from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 from EventScrapper.scrapper import SUCCESS
 from EventScrapper.scrapper.base_extractor import BaseExtractor
-from EventScrapper.scrapper.event_model import Event
+from shared.contracts.event_model import Event
 from EventScrapper.scrapper.utils import build_request_response
 
 

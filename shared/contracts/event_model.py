@@ -3,7 +3,7 @@ import json
 import time
 from dataclasses import dataclass
 
-from EventScrapper.contracts import events_pb2
+from shared.contracts import events_pb2
 
 
 @dataclass(frozen=True)

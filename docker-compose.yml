@@ -8,4 +8,5 @@ services:
     volumes:
       - ./:/app/src
     environment:
-      AZURE_STORAGE_CONNECTION_STRING : ""
+      AZURE_STORAGE_CONNECTION_STRING : BlobEndpoint=https://stdundaa.blob.core.windows.net/;QueueEndpoint=https://stdundaa.queue.core.windows.net/;FileEndpoint=https://stdundaa.file.core.windows.net/;TableEndpoint=https://stdundaa.table.core.windows.net/;SharedAccessSignature=sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2021-04-10T19:34:10Z&st=2021-02-04T11:34:10Z&spr=https&sig=vkHhgxsFc7IaaSJxdvqO%2FZ9iUhlnO4TxwCWN0EG5XZ8%3D
+
