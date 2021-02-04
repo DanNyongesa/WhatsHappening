@@ -6,8 +6,8 @@ from selenium.webdriver.chrome.options import Options
 
 from EventScrapper.scrapper.ticket_sasa import ScrapTicketSasa
 from EventScrapper.scrapper.utils import run_extractor
-from shared.azure_blob import DundaaBlobClient
-from shared.messenger import BlobMessengerSetting
+from shared.messengers.azure_blob import DundaaBlobClient
+from shared.messengers.messenger import BlobMessengerSetting
 
 # reduce log level
 _loggers = []

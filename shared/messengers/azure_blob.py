@@ -5,7 +5,7 @@ import logging
 
 from azure.core.exceptions import ResourceExistsError
 from azure.storage.blob import BlobServiceClient
-from shared.messenger import Messenger, BlobMessengerSetting
+from shared.messengers.messenger import Messenger, BlobMessengerSetting
 
 class DundaaBlobClient(Messenger):
     def __init__(self, connection_string: str,logger=None):

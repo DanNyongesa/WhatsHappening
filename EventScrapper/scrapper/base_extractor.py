@@ -1,7 +1,7 @@
 import logging
 import copy
 
-from shared.messenger import MessengerSetting
+from shared.messengers.messenger import MessengerSetting
 
 
 class BaseExtractor():
