@@ -20,8 +20,7 @@ class BaseExtractor():
         "events": [],
         "response": None,
         "messenger": None,
-        "messenger_setting": MessengerSetting(),
-        "routing_key": "scrapped_events"
+        "messenger_setting": MessengerSetting()
     }
 
     def __init__(self, **kwargs):
@@ -60,4 +59,4 @@ class BaseExtractor():
         self.logger.info("Sending messages to {}".format(self.messenger_setting.key))
         self.logger.info("found %d events" % len(self.events))
         if self.messenger is not None:
-            self.messenger.send_message(data=[event.serialize("json") for event in self.events], messenger_setting=self.messenger_setting)
+            self.result = self.messenger.send_message(data=[event.serialize("json") for event in self.events], messenger_setting=self.messenger_setting)

@@ -1,5 +1,56 @@
 version: '3'
 services:
+
+  events_api:
+    image: darklotus/dundaa:dev
+    build:
+      context: .
+    command: [ "python", "EventsApi/app.py" ]
+    volumes:
+      - ./:/app/src
+    environment:
+      AZURE_STORAGE_CONNECTION_STRING: BlobEndpoint=https://stdundaa.blob.core.windows.net/;QueueEndpoint=https://stdundaa.queue.core.windows.net/;FileEndpoint=https://stdundaa.file.core.windows.net/;TableEndpoint=https://stdundaa.table.core.windows.net/;SharedAccessSignature=sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2021-04-10T19:34:10Z&st=2021-02-04T11:34:10Z&spr=https&sig=vkHhgxsFc7IaaSJxdvqO%2FZ9iUhlnO4TxwCWN0EG5XZ8%3D
+      AMQP_URL: amqps://cmwyttfq:pBL0VUHRsAjnwCzwDe1avSzMrb8DZxLq@rattlesnake.rmq.cloudamqp.com/cmwyttfq
+      FLASK_DEBUG: 1
+      AMQP_HOST: rattlesnake.rmq.cloudamqp.com
+      COSMOS_ACCOUNT_KEY: wa5aZvpG9u211Tvl9Yacnb16oyZuymu9kxrS7IZPvQZPmKlQhhWUj7yAoVfIKDvdTC0vAqbnGWXY9Y2j8qRvNg==
+      COSMOS_ACCOUNT_URI: https://dundaa.documents.azure.com:443/
+    ports:
+      - 8000:8000
+
+  event_discovery_api:
+    image: darklotus/dundaa:dev
+    build:
+      context: .
+    command: [ "python", "EventDiscoveryApi/app.py" ]
+    volumes:
+      - ./:/app/src
+    environment:
+      AZURE_STORAGE_CONNECTION_STRING: BlobEndpoint=https://stdundaa.blob.core.windows.net/;QueueEndpoint=https://stdundaa.queue.core.windows.net/;FileEndpoint=https://stdundaa.file.core.windows.net/;TableEndpoint=https://stdundaa.table.core.windows.net/;SharedAccessSignature=sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2021-04-10T19:34:10Z&st=2021-02-04T11:34:10Z&spr=https&sig=vkHhgxsFc7IaaSJxdvqO%2FZ9iUhlnO4TxwCWN0EG5XZ8%3D
+      AMQP_URL: amqps://cmwyttfq:pBL0VUHRsAjnwCzwDe1avSzMrb8DZxLq@rattlesnake.rmq.cloudamqp.com/cmwyttfq
+      FLASK_DEBUG: 1
+      AMQP_HOST: rattlesnake.rmq.cloudamqp.com
+      COSMOS_ACCOUNT_KEY: wa5aZvpG9u211Tvl9Yacnb16oyZuymu9kxrS7IZPvQZPmKlQhhWUj7yAoVfIKDvdTC0vAqbnGWXY9Y2j8qRvNg==
+      COSMOS_ACCOUNT_URI: https://dundaa.documents.azure.com:443/
+    ports:
+      - 5000:5000
+
+  event_processor:
+    image: darklotus/dundaa:dev
+    build:
+      context: .
+    command: [ "python", "EventsProcessor/app.py" ]
+    volumes:
+      - ./:/app/src
+    environment:
+      AZURE_STORAGE_CONNECTION_STRING: BlobEndpoint=https://stdundaa.blob.core.windows.net/;QueueEndpoint=https://stdundaa.queue.core.windows.net/;FileEndpoint=https://stdundaa.file.core.windows.net/;TableEndpoint=https://stdundaa.table.core.windows.net/;SharedAccessSignature=sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2021-04-10T19:34:10Z&st=2021-02-04T11:34:10Z&spr=https&sig=vkHhgxsFc7IaaSJxdvqO%2FZ9iUhlnO4TxwCWN0EG5XZ8%3D
+      AMQP_URL: amqps://cmwyttfq:pBL0VUHRsAjnwCzwDe1avSzMrb8DZxLq@rattlesnake.rmq.cloudamqp.com/cmwyttfq
+      FLASK_DEBUG: 1
+      AMQP_HOST: rattlesnake.rmq.cloudamqp.com
+      COSMOS_ACCOUNT_KEY: wa5aZvpG9u211Tvl9Yacnb16oyZuymu9kxrS7IZPvQZPmKlQhhWUj7yAoVfIKDvdTC0vAqbnGWXY9Y2j8qRvNg==
+      COSMOS_ACCOUNT_URI: https://dundaa.documents.azure.com:443/
+
+
   scrapper:
     image: darklotus/dundaa:dev
     build:
@@ -9,4 +60,6 @@ services:
       - ./:/app/src
     environment:
       AZURE_STORAGE_CONNECTION_STRING : BlobEndpoint=https://stdundaa.blob.core.windows.net/;QueueEndpoint=https://stdundaa.queue.core.windows.net/;FileEndpoint=https://stdundaa.file.core.windows.net/;TableEndpoint=https://stdundaa.table.core.windows.net/;SharedAccessSignature=sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2021-04-10T19:34:10Z&st=2021-02-04T11:34:10Z&spr=https&sig=vkHhgxsFc7IaaSJxdvqO%2FZ9iUhlnO4TxwCWN0EG5XZ8%3D
-
+      AMQP_URL: amqps://cmwyttfq:pBL0VUHRsAjnwCzwDe1avSzMrb8DZxLq@rattlesnake.rmq.cloudamqp.com/cmwyttfq
+      COSMOS_ACCOUNT_KEY: wa5aZvpG9u211Tvl9Yacnb16oyZuymu9kxrS7IZPvQZPmKlQhhWUj7yAoVfIKDvdTC0vAqbnGWXY9Y2j8qRvNg==
+      COSMOS_ACCOUNT_URI: https://dundaa.documents.azure.com:443/

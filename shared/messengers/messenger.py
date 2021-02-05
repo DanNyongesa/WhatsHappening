@@ -6,6 +6,10 @@ class MessengerSetting():
     key: str = None
     service_name: str = None
 
+@dataclass
+class MessageConsumerSetting():
+    listen_keys: [str]
+    service_name: str = None
 
 @dataclass
 class BlobMessengerSetting(MessengerSetting):
@@ -13,6 +17,8 @@ class BlobMessengerSetting(MessengerSetting):
 
     def __post_init__(self):
         self.container_name = self.service_name.lower()
+
+
 
 class Messenger():
     def send_message(self, messenger_setting: MessengerSetting, data: any):

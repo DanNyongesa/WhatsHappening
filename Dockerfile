@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM mcr.microsoft.com/azure-functions/python:3.0-python3.7
 
 # Adding trusting keys to apt and Google Chrome to the repositories
 # then Updating apt and install Google Chrome
@@ -19,15 +19,19 @@ ENV DISPLAY=:99
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /app/src
-
 ENV AzureWebJobsScriptRoot=/app/src \
     AzureFunctionsJobHost__Logging__Console__IsEnabled=true
+
+COPY ./prod.requirements.txt /requirements.txt
+
+RUN pip install -r /requirements.txt
+
+
+WORKDIR /app/src
 
 
 #Copy source code
 COPY . /app/src
 
-WORKDIR /app/src
 
-RUN pip install -r prod.requirements.txt
 

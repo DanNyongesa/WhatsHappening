@@ -5,8 +5,7 @@ from dataclasses import dataclass
 
 from shared.contracts import events_pb2
 
-
-@dataclass(frozen=True)
+@dataclass
 class Event:
     name: str
     location: str
@@ -17,6 +16,17 @@ class Event:
     banner_url: str
     site_name: str
     url: str
+    id: str = None
+
+    def __post_init__(self):
+        if self.id is None:
+            _id = "{name}{site_name}{start_date}{end_date}".format(
+                name=self.name.strip(),
+                site_name=self.site_name,
+                start_date=self.start_date,
+                end_date=self.end_date
+            )
+            self.id = _id   .replace(" ", "")
 
     @staticmethod
     def to_unix(dt: datetime.datetime) -> float:
@@ -49,6 +59,7 @@ class Event:
 
         return json.dumps(
             {
+                "id": self.id,
                 "name": self.name,
                 "location": self.location,
                 "start_date": str(start_datetime),

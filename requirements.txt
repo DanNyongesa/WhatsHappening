@@ -11,3 +11,7 @@ regex==2019.11.1
 requests==2.22.0
 selenium==3.141.0
 azure-storage-blob
+azure-functions
+flask
+azure-cosmos
+flask-cors

@@ -16,6 +16,7 @@ class DundaaBlobClient(Messenger):
         self.blob_service_client = BlobServiceClient.from_connection_string(connection_string)
 
 
+
     def get_container_client(self, container_name: str):
         return self.blob_service_client.create_container(container_name)
 
@@ -25,6 +26,12 @@ class DundaaBlobClient(Messenger):
             properties = new_container.get_container_properties()
         except ResourceExistsError:
             self.logger.info("Container already exists.")
+
+    def read(self, container_name, blob_path):
+        _blob_client = self.blob_service_client.get_blob_client(container_name, blob_path, snapshot=None)
+        data = _blob_client.download_blob().readall()
+        data = json.loads(data)
+        return data
 
 
     def write(self, data: iter, container_name: str, folder=None):
