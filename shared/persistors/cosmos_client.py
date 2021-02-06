@@ -31,8 +31,6 @@ class DundaaCosmosClient(Persistor):
     def __fetch_all(self, db, container_name: str):
         container = db.get_container_client(container=container_name)
         items = list(container.read_all_items(max_item_count=10))
-        print('Found {0} items'.format(items.__len__()))
-        print(items)
         return items
 
     def __fetch_one(self, id: str, container_name: str, partion_key: str, db):

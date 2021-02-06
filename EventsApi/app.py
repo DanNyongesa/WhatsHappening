@@ -1,25 +1,27 @@
-from flask import Flask, jsonify
 import os
+
+from flask import Flask, jsonify
+from flask.views import MethodView
+from flask_cors import CORS
+
 from shared.persistors.cosmos_client import DundaaCosmosClient
 from shared.persistors.persistor import PersistorSetting
 from shared.services import events_api_setting as service_setting
-from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
-from flask.views import MethodView
-
 cosmos_client = DundaaCosmosClient(
-        cosmos_endpoint=os.environ.get("COSMOS_ACCOUNT_URI"),
-        primary_key=os.environ.get("COSMOS_ACCOUNT_KEY")
-    )
+    cosmos_endpoint=os.environ.get("COSMOS_ACCOUNT_URI"),
+    primary_key=os.environ.get("COSMOS_ACCOUNT_KEY")
+)
 
 persistor_setting = PersistorSetting(
-        container_id=service_setting.cosmos_container_id,
-        database_id=service_setting.cosmos_database_id,
-        partion_key="/site_name"
-    )
+    container_id=service_setting.cosmos_container_id,
+    database_id=service_setting.cosmos_database_id,
+    partion_key="/site_name"
+)
+
 
 class EventsAPI(MethodView):
 
@@ -31,9 +33,26 @@ class EventsAPI(MethodView):
             "events": events
         })
 
+
+class RecommendedEventsApi(MethodView):
+
+    def get(self, user_id):
+        events = cosmos_client.query(
+            persistor_setting
+        )
+        return jsonify({
+            "events": events
+        })
+
+
 app.add_url_rule(
     '/events/',
     view_func=EventsAPI.as_view('events')
+)
+
+app.add_url_rule(
+    '/events/recommended/<string:user_id>',
+    view_func=RecommendedEventsApi.as_view('recommended_events')
 )
 
 if __name__ == "__main__":

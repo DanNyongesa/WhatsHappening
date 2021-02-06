@@ -1,3 +1,5 @@
+from EventScrapper.base_extractor import WebScrapperResponse
+
 class ExtractEventManager(object):
     """
     Action event manager
@@ -22,7 +24,7 @@ def run_extractor(class_instance, entry_function="run"):
     return class_instance
 
 
-def build_request_response(status_code, status_details=None):
+def build_request_response(status_code, status_details=None) -> WebScrapperResponse:
     """
     Build a response for a validation request.
     Arguments:
@@ -33,4 +35,4 @@ def build_request_response(status_code, status_details=None):
         dictionary.
     """
     response = {"status_code": status_code, "status_details": status_details}
-    return response
+    return WebScrapperResponse(**response)

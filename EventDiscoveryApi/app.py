@@ -6,9 +6,11 @@ import sys
 from flask import Flask
 from flask import jsonify, request, abort
 
-from shared.contracts.Messages import EventBlobCreated
+from shared.contracts.Messages import EventBlobCreated, ScrapSite
 from shared.messengers.amqp_sdk import DundaaAMQPSDK, MessengerSetting
 from shared.services import event_discovery_setting
+
+SCRAPPER_DELAY = 100
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
@@ -45,6 +47,21 @@ def new_events():
         key=event_discovery_setting.key
     )
     amqp_messenger.send_message(data=blob_created_message.to_json(), messenger_setting=messenger_setting)
+
+    # scheduled scrapper
+    app.logger.info("Scheduling web scrapper")
+    scheduled_scrap = ScrapSite(
+        delay=SCRAPPER_DELAY
+    )
+    delayed_messenger_setting = MessengerSetting(
+        service_name=event_discovery_setting.delayed_exchange,
+        key=event_discovery_setting.key
+    )
+    amqp_messenger.send_message(
+        data=scheduled_scrap.to_json(),
+        messenger_setting=delayed_messenger_setting,
+        delay=SCRAPPER_DELAY
+    )
 
     return jsonify({
         "message": "Accepted"

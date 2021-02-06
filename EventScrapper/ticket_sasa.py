@@ -11,17 +11,7 @@ from EventScrapper.base_extractor import BaseExtractor
 from shared.contracts.event_model import Event
 from EventScrapper.utils import build_request_response
 
-
 class ScrapTicketSasa(BaseExtractor):
-    def __init__(self, *args, **kwargs):
-        super().__init__(
-            **kwargs,
-            success_status_codes=[SUCCESS],
-            site_name="ticketsasa",
-            site_url="https://www.ticketsasa.com",
-            response = None
-        )
-
     def run(self):
         try:
             loop = asyncio.get_event_loop()

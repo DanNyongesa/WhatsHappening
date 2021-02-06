@@ -3,10 +3,10 @@ import re
 import time
 
 from bs4 import BeautifulSoup
-from scrapper import SUCCESS, UNKNOWN
-from scrapper.base_extractor import BaseExtractor
-from scrapper.event_model import Event
-from scrapper.utils import build_request_response
+from EventScrapper import SUCCESS, UNKNOWN
+from EventScrapper.base_extractor import BaseExtractor
+from shared.contracts.event_model import Event
+from EventScrapper.utils import build_request_response
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait

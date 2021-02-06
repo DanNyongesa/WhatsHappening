@@ -59,6 +59,8 @@ def write_cosmos(ch, method, properties, body):
         persitor_setting=persistor_setting
     )
     logger.info("Event items processing complete")
+    # schedule web scrapper
+
     return True
 
 
@@ -82,8 +84,8 @@ def get_blob(data: EventBlobCreated):
 
 # listen for blob created events
 message_consumer_setting = MessageConsumerSetting(
-    service_name=service_setting.name,
-    listen_keys=service_setting.listen
+    service_name=service_setting.listen.exchange,
+    listen_keys=service_setting.listen.keys
 )
 
 amqp_messenger.consume_messages(

@@ -3,13 +3,13 @@ from dataclasses import dataclass
 
 @dataclass
 class MessengerSetting():
-    key: str = None
-    service_name: str = None
+    key: str
+    service_name: str
 
 @dataclass
 class MessageConsumerSetting():
     listen_keys: [str]
-    service_name: str = None
+    service_name: str
 
 @dataclass
 class BlobMessengerSetting(MessengerSetting):

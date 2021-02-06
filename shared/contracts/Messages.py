@@ -1,6 +1,36 @@
 import json
+import uuid
+import datetime
 from dataclasses import dataclass, asdict
 
+time_format = '%d/%m/%y %H:%M:%S'
+
+@dataclass
+class ScrapSite():
+    delay: float
+    scheduled_on: datetime.datetime = None
+    id: str = None
+
+
+    def __post_init__(self):
+        if self.id is None:
+            self.id = str(uuid.uuid4())
+        if self.scheduled_on is None:
+            self.scheduled_on = datetime.datetime.now() + datetime.timedelta(hours=3)
+
+    def to_dict(self):
+        return asdict(self)
+
+    def to_json(self):
+        obj = self.to_dict()
+        obj["scheduled_on"] = self.scheduled_on.strftime(time_format)
+        return json.dumps(obj)
+
+    @classmethod
+    def from_json(cls, data):
+        data = json.loads(data)
+        data["scheduled_on"] = datetime.datetime.strptime(data["scheduled_on"], time_format)
+        return cls(**data)
 
 @dataclass
 class EventBlobCreated():
