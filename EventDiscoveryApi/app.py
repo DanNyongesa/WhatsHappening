@@ -5,6 +5,7 @@ import sys
 
 from flask import Flask
 from flask import jsonify, request, abort
+from flask_cors import CORS
 
 from shared.contracts.Messages import EventBlobCreated, ScrapSite
 from shared.messengers.amqp_sdk import DundaaAMQPSDK, MessengerSetting
@@ -20,12 +21,38 @@ logging.basicConfig(
 )
 
 app = Flask(__name__)
+CORS(app)
+
 
 amqp_messenger = DundaaAMQPSDK(
     amqp_host=os.environ.get("AMQP_HOST"),
     amqp_url=os.environ.get("AMQP_URL")
 )
 
+@app.route('/api/scrap', methods=["POST"])
+def discover_events():
+    app.logger.info("request headers %s" % request.headers)
+    req_data = request.data.decode()
+
+    # scheduled scrapper
+    app.logger.info("Scheduling web scrapper")
+    scheduled_scrap = ScrapSite(
+        delay=30
+    )
+
+    delayed_messenger_setting = MessengerSetting(
+        service_name=event_discovery_setting.delayed_exchange,
+        key=event_discovery_setting.key
+    )
+    amqp_messenger.send_message(
+        data=scheduled_scrap.to_json(),
+        messenger_setting=delayed_messenger_setting,
+        delay=SCRAPPER_DELAY
+    )
+
+    return jsonify({
+        "message": "Accepted"
+    })
 
 @app.route('/api/NewEvents', methods=["GET", "POST"])
 def new_events():

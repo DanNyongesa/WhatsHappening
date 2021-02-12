@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 import json
+import time
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -60,8 +61,8 @@ def run(ch, method, properties, body):
     td = kenyatime() - kenyatime()
     td = td.total_seconds()
     if td < message.delay:
-        logger.error("Time difference %d. message has not reached maturity, Aborting now" % td)
-        return -1
+        logger.error("Time difference %d. message has not reached maturity, Sleeping until function is ready" % td)
+        time.sleep(td)
     # prepare selenium driver
     chrome_options = set_chrome_options()
     driver = webdriver.Chrome(options=chrome_options)

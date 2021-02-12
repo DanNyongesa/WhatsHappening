@@ -3,6 +3,7 @@ import os
 from flask import Flask, jsonify
 from flask.views import MethodView
 from flask_cors import CORS
+import requests
 
 from shared.persistors.cosmos_client import DundaaCosmosClient
 from shared.persistors.persistor import PersistorSetting
@@ -29,6 +30,13 @@ class EventsAPI(MethodView):
         events = cosmos_client.query(
             persistor_setting
         )
+        if len(events) == 0:
+            app.logger.info("Could not find events. scheduling scrapper run")
+            requests.post(
+                "http://localhost:5000/api/scrap",
+                data={}
+            )
+
         return jsonify({
             "events": events
         })
@@ -37,9 +45,12 @@ class EventsAPI(MethodView):
 class RecommendedEventsApi(MethodView):
 
     def get(self, user_id):
-        events = cosmos_client.query(
-            persistor_setting
-        )
+        try:
+            events = cosmos_client.query(
+                persistor_setting
+            )
+        except Exception as exc:
+            events = []
         return jsonify({
             "events": events
         })
