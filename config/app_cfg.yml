@@ -1,0 +1,10 @@
+amqpq:
+  host: "shrimp.rmq.cloudamqp.com"
+  password: "P__TkhouA0w9w2-GBbQcgBpw0Wg3sVav"
+  username: "qprfemrn"
+  vhost: "qprfemrn"
+  dialect: "amqp"
+  port: "8883"
+  event_scrapped_exchange: "dundaa.events"
+  event_scrapped_queue_name: "dandaa.scrapper"
+  event_scrapped_exchange_routing_key: "EventScrapped"
