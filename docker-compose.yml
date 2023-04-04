@@ -1,0 +1,77 @@
+version: '3'
+services:
+  frontend:
+    image: daklotus/dundaa-frontend:dev
+    build:
+      context: frontend/.
+      network: host
+    ports:
+      - 3000:3000
+
+
+  events_api:
+    image: darklotus/dundaa:dev
+    build:
+      context: .
+    command: [ "python", "EventsApi/app.py" ]
+    volumes:
+      - ./EventsApi:/app/src/EventsApi
+      - ./shared:/app/src/shared
+    environment:
+      AZURE_STORAGE_CONNECTION_STRING: ${BLOB_CONNECTION_STRING}
+      AMQP_URL: ${AMQP_URL}
+      FLASK_DEBUG: 1
+      AMQP_HOST: ${AMQP_HOST}
+      COSMOS_ACCOUNT_KEY: ${COSMOS_ACCOUNT_KEY}
+      COSMOS_ACCOUNT_URI: ${COSMOS_ACCOUNT_URI}
+    ports:
+      - 8000:8000
+
+  event_discovery_api:
+    image: darklotus/dundaa:dev
+    build:
+      context: .
+    command: [ "python", "EventDiscoveryApi/app.py" ]
+    volumes:
+      - ./EventDiscoveryApi:/app/src/EventDiscoveryApi
+      - ./shared:/app/src/shared
+    environment:
+      AZURE_STORAGE_CONNECTION_STRING: ${BLOB_CONNECTION_STRING}
+      AMQP_URL: ${AMQP_URL}
+      FLASK_DEBUG: 1
+      AMQP_HOST: ${AMQP_HOST}
+      COSMOS_ACCOUNT_KEY: ${COSMOS_ACCOUNT_KEY}
+      COSMOS_ACCOUNT_URI: ${COSMOS_ACCOUNT_URI}
+    ports:
+      - 5000:5000
+
+  event_processor:
+    image: darklotus/dundaa:dev
+    build:
+      context: .
+    command: [ "python", "EventsProcessor/app.py" ]
+    volumes:
+      - ./EventsApi:/app/src/EventsApi
+      - ./shared:/app/src/shared
+    environment:
+      AZURE_STORAGE_CONNECTION_STRING: ${BLOB_CONNECTION_STRING}
+      AMQP_URL: ${AMQP_URL}
+      FLASK_DEBUG: 1
+      AMQP_HOST: ${AMQP_HOST}
+      COSMOS_ACCOUNT_KEY: ${COSMOS_ACCOUNT_KEY}
+      COSMOS_ACCOUNT_URI: ${COSMOS_ACCOUNT_URI}
+
+
+  scrapper:
+    image: darklotus/dundaa:dev
+    build:
+      context: .
+    command: [ "python", "EventScrapper/app.py" ]
+    volumes:
+      - ./EventScrapper:/app/src/EventScrapper
+      - ./shared:/app/src/shared
+    environment:
+      AZURE_STORAGE_CONNECTION_STRING : ${BLOB_CONNECTION_STRING}
+      AMQP_URL: ${AMQP_URL}
+      COSMOS_ACCOUNT_KEY: ${COSMOS_ACCOUNT_KEY}
+      COSMOS_ACCOUNT_URI: ${COSMOS_ACCOUNT_URI}
